@@ -1,0 +1,103 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Provision Bastion Host with Elastic IP address
+
+Parameters:
+
+  RootStackName:
+    Type: "String"
+  VpcId:
+    Type: "AWS::EC2::VPC::Id"
+  PublicSubnet1:
+    Type: "AWS::EC2::Subnet::Id"
+  BastionKeyName:
+    Type: "AWS::EC2::KeyPair::KeyName"
+  BastionAmiId:
+    Type: "String"
+  BastionInstanceType:
+    Type: "String"
+
+Resources:
+
+  BastionHostRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy
+      - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - ec2.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: "/"
+
+  RoleInstanceProfile:
+    Type: "AWS::IAM::InstanceProfile"
+    Properties:
+      Path: "/"
+      Roles:
+      - !Ref "BastionHostRole"
+
+  BastionHostSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Bastion security group
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+      - CidrIp: 0.0.0.0/0
+        IpProtocol: tcp
+        FromPort: 22
+        ToPort: 22
+        Description: Your security rule.
+      SecurityGroupEgress:
+      - CidrIp: 0.0.0.0/0
+        IpProtocol: -1
+      Tags:
+      - Key: Name
+        Value: !Sub ${AWS::StackName} bastion security group
+
+  BastionHost:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref BastionAmiId
+      InstanceType: !Ref BastionInstanceType
+      KeyName: !Ref BastionKeyName
+      SubnetId: !Ref PublicSubnet1
+      IamInstanceProfile: !Ref RoleInstanceProfile
+      BlockDeviceMappings: 
+        - DeviceName: "/dev/sda1"
+          Ebs: 
+            Encrypted: true
+            VolumeType: "gp2"
+            DeleteOnTermination: "true"
+            VolumeSize: 10
+      SecurityGroupIds:
+      - !GetAtt BastionHostSecurityGroup.GroupId
+      Tags:
+        - Key: "Name"
+          Value: !Sub ${RootStackName}-BastionHost
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -x
+          apt-get update;
+          apt-get -y upgrade
+          #!/bin/bash
+          mkdir /tmp/ssm
+          cd /tmp/ssm
+          wget https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/debian_amd64/amazon-ssm-agent.deb
+          sudo dpkg -i amazon-ssm-agent.deb
+          sudo start amazon-ssm-agent
+          sudo systemctl enable amazon-ssm-agent
+     
+  BastionHostEIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      InstanceId: !Ref BastionHost
+
+Outputs:
+  BastionInstanceSecurityGroup:
+    Value: !Ref BastionHostSecurityGroup

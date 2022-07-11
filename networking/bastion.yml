@@ -3,8 +3,6 @@ Description: Provision Bastion Host with Elastic IP address
 
 Parameters:
 
-  RootStackName:
-    Type: "String"
   VpcId:
     Type: "AWS::EC2::VPC::Id"
   PublicSubnet1:
@@ -58,7 +56,7 @@ Resources:
         IpProtocol: -1
       Tags:
       - Key: Name
-        Value: !Sub ${AWS::StackName} bastion security group
+        Value: "Bastion host security group"
 
   BastionHost:
     Type: AWS::EC2::Instance

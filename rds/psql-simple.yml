@@ -16,6 +16,7 @@ Parameters:
     Type: "String"
   RdsMultiAz:
     Type: "String"
+    AllowedValues: [true, false]
   RdsInstanceName:
     Type: "String"
   VpcId:

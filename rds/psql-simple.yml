@@ -24,12 +24,6 @@ Parameters:
     Type: "AWS::EC2::Subnet::Id"
   PrivateSubnet3:
     Type: "AWS::EC2::Subnet::Id"
-  PrivateSubnet1Cidr:
-    Type: "String"
-  PrivateSubnet2Cidr:
-    Type: "String"
-  PrivateSubnet3Cidr:
-    Type: "String"
   BastionInstanceSecurityGroup:
     Type: "String"
 

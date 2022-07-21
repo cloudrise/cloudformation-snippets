@@ -27,7 +27,7 @@ Parameters:
   PrivateSubnet3:
     Type: "AWS::EC2::Subnet::Id"
   BastionInstanceSecurityGroup:
-    Type: "String"
+    Type: "AWS::EC2::SecurityGroup::Id"
 
 Resources:
   RdsDatabaseSecurityGroup:

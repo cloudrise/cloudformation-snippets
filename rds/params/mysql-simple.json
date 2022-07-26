@@ -1,0 +1,14 @@
+[
+	{"ParameterKey": "RdsEngineVersion","ParameterValue": "8.0.27"},
+	{"ParameterKey": "RdsAllocatedStorage","ParameterValue": "5"},
+	{"ParameterKey": "RdsInstanceClass","ParameterValue": "db.t3.micro"},
+	{"ParameterKey": "RdsBackupRetentionPeriod","ParameterValue": "7"},
+	{"ParameterKey": "RdsStorageType","ParameterValue": "gp2"},
+	{"ParameterKey": "RdsMultiAz","ParameterValue": "false"},
+	{"ParameterKey": "RdsInstanceName","ParameterValue": "your-instance-name"},
+	{"ParameterKey": "VpcId","ParameterValue": "vpc-123"},
+    {"ParameterKey": "PrivateSubnet1","ParameterValue": "subnet-123"},
+	{"ParameterKey": "PrivateSubnet2","ParameterValue": "subnet-123"},
+	{"ParameterKey": "PrivateSubnet3","ParameterValue": "subnet-123"},
+	{"ParameterKey": "BastionInstanceSecurityGroup","ParameterValue": "sg-123"}
+]

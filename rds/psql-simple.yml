@@ -33,7 +33,6 @@ Parameters:
 Resources:
   RdsDatabaseSecurityGroup:
     Type: AWS::EC2::SecurityGroup
-    DeletionPolicy: Retain
     Properties:
       GroupDescription: PSQL RDS security group
       VpcId: !Ref VpcId
@@ -52,7 +51,6 @@ Resources:
 
   PrivateSubnetGroup:
     Type: AWS::RDS::DBSubnetGroup
-    DeletionPolicy: Retain
     Properties:
       DBSubnetGroupName: !Sub ${AWS::StackName}-private-subnetgroup
       DBSubnetGroupDescription: !Sub 'Database subnet group for ${AWS::StackName}'
@@ -63,7 +61,6 @@ Resources:
 
   RdsCredentialsSecret:
     Type: "AWS::SecretsManager::Secret"
-    DeletionPolicy: Retain
     Properties:
       Name: !Sub '${AWS::StackName}-RdsInstance'
       Description: !Sub 'Database secret for ${AWS::StackName}'
@@ -75,7 +72,6 @@ Resources:
 
   RdsCredentialsSecretInstanceAttachment:
     Type: "AWS::SecretsManager::SecretTargetAttachment"
-    DeletionPolicy: Retain
     Properties:
       SecretId: !Ref RdsCredentialsSecret
       TargetId: !Ref RdsDatabase
@@ -83,7 +79,6 @@ Resources:
 
   RdsDatabase:
     Type: AWS::RDS::DBInstance
-    DeletionPolicy: Retain
     Properties:
       AllowMajorVersionUpgrade: false
       AutoMinorVersionUpgrade: false

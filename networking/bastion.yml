@@ -10,7 +10,7 @@ Parameters:
   BastionKeyName:
     Type: "AWS::EC2::KeyPair::KeyName"
   BastionAmiId:
-    Type: "String"
+    Type: "AWS::EC2::Image::Id"
   BastionInstanceType:
     Type: "String"
 

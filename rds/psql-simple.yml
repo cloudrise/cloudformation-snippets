@@ -87,8 +87,8 @@ Resources:
       EngineVersion: !Ref RdsEngineVersion
       StorageType: !Ref RdsStorageType
       AllocatedStorage: !Ref RdsAllocatedStorage
-      MasterUsername: !Join ['', ['{{resolve:secretsmanager:', !Ref RdsCredentialsSecret, ':SecretString:username}}' ]]
-      MasterUserPassword: !Join ['', ['{{resolve:secretsmanager:', !Ref RdsCredentialsSecret, ':SecretString:password}}' ]]
+      MasterUsername: !Sub '{{resolve:secretsmanager:${RdsCredentialsSecret}:SecretString:username}}'
+      MasterUserPassword: !Sub '{{resolve:secretsmanager:${RdsCredentialsSecret}:SecretString:password}}'
       DBInstanceClass: !Ref RdsInstanceClass
       BackupRetentionPeriod: !Ref RdsBackupRetentionPeriod
       MultiAZ: !Ref RdsMultiAz
